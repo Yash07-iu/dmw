@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMW Lab Exercises</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --code-bg: #020617;
+            --button-bg: #2563eb;
+            --button-hover: #1d4ed8;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .exercise {
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .exercise:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .markdown-content {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+        .markdown-content h2 {
+            margin-top: 0;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .markdown-content h3 {
+            color: var(--accent-color);
+            margin-top: 1rem;
+        }
+        .markdown-content p {
+            color: #cbd5e1;
+            margin: 0.5rem 0;
+        }
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        pre {
+            margin: 0;
+        }
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background-color: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .copy-btn:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+        .toggle-btn {
+            background-color: var(--container-bg);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+        }
+        .toggle-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+        .code-container.collapsed {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DMW Lab Exercises</h1>
+
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 1 - Data Understanding and Classification</h2>
+<p>Read the given dataset using Pandas.</p>
+<p>Display first few records of the dataset.</p>
+<p>Analyze structure using info() and describe().</p>
+<p>Identify each attribute as qualitative or quantitative.</p>
+<p>Determine whether quantitative data is discrete or continuous.</p>
+<p>Identify the scale of measurement (Nominal, Ordinal, Interval, Ratio).</p>
+<p>Store results in a structured format.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+
+df = pd.read_csv("dataset.csv")
+
+print(df.head())
+print(df.info())
+print(df.describe())
+
+def classify_data_type(series):
+    if series.dtype == 'object':
+        return "Qualitative"
+    elif np.issubdtype(series.dtype, np.integer):
+        return "Quantitative - Discrete"
+    elif np.issubdtype(series.dtype, np.floating):
+        return "Quantitative - Continuous"
+    else:
+        return "Unknown"
+
+def identify_scale(column):
+    col = column.lower()
+    if col in ["name", "gender", "course", "city"]:
+        return "Nominal"
+    elif col in ["year"]:
+        return "Ordinal"
+    elif col in ["student_id", "age", "marks", "attendance"]:
+        return "Ratio"
+    return "Unknown"
+
+results = []
+for col in df.columns:
+    data_type = classify_data_type(df[col])
+    scale = identify_scale(col)
+    results.append([col, data_type, scale])
+
+classification_df = pd.DataFrame(results, columns=["Attribute","Data Type","Scale"])
+
+print(classification_df)
+
+classification_df.to_csv("classification_result.csv", index=False)</code></pre>
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 2 - Data Cleaning Techniques</h2>
+<p>Read the dataset containing missing and inconsistent values.</p>
+<p>Display dataset structure and summary.</p>
+<p>Replace blank values with NaN.</p>
+<p>Identify numerical and categorical columns.</p>
+<p>Fill missing numerical values using median.</p>
+<p>Fill missing categorical values using mode.</p>
+<p>Detect and correct noisy data (invalid values).</p>
+<p>Fix inconsistent data (formatting issues).</p>
+<p>Clean column names.</p>
+<p>Save the cleaned dataset.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+
+df = pd.read_csv("dataset.csv")
+
+print(df.head())
+print(df.info())
+print(df.describe())
+
+df.replace("", np.nan, inplace=True)
+
+num_cols = df.select_dtypes(include=['int64','float64']).columns
+for col in num_cols:
+    df[col] = df[col].fillna(df[col].median())
+
+cat_cols = df.select_dtypes(include=['object']).columns
+for col in cat_cols:
+    df[col] = df[col].fillna(df[col].mode()[0])
+
+df.loc[(df['Age'] &lt; 17) | (df['Age'] &gt; 25), 'Age'] = df['Age'].median()
+df.loc[(df['CGPA'] &lt; 0) | (df['CGPA'] &gt; 10), 'CGPA'] = df['CGPA'].mean()
+
+df['Gender'] = df['Gender'].str.capitalize()
+df['Caste_Category'] = df['Caste_Category'].str.upper()
+df['City'] = df['City'].str.strip().str.title()
+
+df.columns = df.columns.str.lower().str.replace(" ", "_")
+
+print(df.isnull().sum())
+
+df.to_csv("cleaned_data.csv", index=False)</code></pre>
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 3 - Data Exploration and Ethical Analysis</h2>
+<p>Load the dataset using Pandas.</p>
+<p>Display dataset using head(), info(), and describe().</p>
+<p>Handle missing values and remove duplicates.</p>
+<p>Perform exploratory data analysis using plots.</p>
+<p>Analyze distribution and relationships between variables.</p>
+<p>Identify outliers in the dataset.</p>
+<p>Examine dataset for privacy issues.</p>
+<p>Identify bias or imbalance in data.</p>
+<p>Summarize findings and ethical concerns.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("dataset.csv")
+
+print(df.head())
+print(df.info())
+print(df.describe())
+
+df.drop_duplicates(inplace=True)
+
+df.hist()
+plt.show()
+
+df.plot(kind='box')
+plt.show()</code></pre>
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 4 - Data Integration and Transformation</h2>
+<p>Load multiple datasets.</p>
+<p>Display and analyze datasets.</p>
+<p>Perform data cleaning if required.</p>
+<p>Merge datasets using common attributes.</p>
+<p>Apply normalization techniques.</p>
+<p>Perform aggregation using group operations.</p>
+<p>Apply discretization on continuous data.</p>
+<p>Analyze transformed dataset.</p>
+<p>Save integrated dataset.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+
+df1 = pd.read_csv("dataset1.csv")
+df2 = pd.read_csv("dataset2.csv")
+
+print(df1.head())
+print(df2.head())
+
+df1.drop_duplicates(inplace=True)
+df2.drop_duplicates(inplace=True)
+
+merged = pd.merge(df1, df2, on="id")
+
+merged['normalized'] = (merged['value'] - merged['value'].min()) / (merged['value'].max() - merged['value'].min())
+
+aggregated = merged.groupby("id").mean()
+
+merged.to_csv("integrated_data.csv", index=False)</code></pre>
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 5 - Dimensionality Reduction using PCA</h2>
+<p>Load dataset using Pandas.</p>
+<p>Handle missing values.</p>
+<p>Separate features from dataset.</p>
+<p>Standardize the dataset.</p>
+<p>Apply Principal Component Analysis (PCA).</p>
+<p>Transform data into principal components.</p>
+<p>Analyze explained variance.</p>
+<p>Visualize reduced data using scatter plot.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("dataset.csv")
+
+print(df.head())
+
+df.dropna(inplace=True)
+
+X = df.select_dtypes(include=['int64','float64'])
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+print(pca.explained_variance_ratio_)
+
+plt.scatter(X_pca[:,0], X_pca[:,1])
+plt.show()</code></pre>
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 6 - Association Rule Mining using Apriori Algorithm</h2>
+<p>Load transactional dataset.</p>
+<p>Convert data into suitable format (binary/one-hot encoding).</p>
+<p>Apply Apriori algorithm.</p>
+<p>Generate frequent itemsets using minimum support.</p>
+<p>Generate association rules.</p>
+<p>Set confidence and lift thresholds.</p>
+<p>Filter strong rules.</p>
+<p>Interpret relationships between items.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+from mlxtend.frequent_patterns import apriori, association_rules
+
+df = pd.read_csv("dataset.csv")
+
+print(df.head())
+
+df = df.astype(bool)
+
+frequent_itemsets = apriori(df, min_support=0.5, use_colnames=True)
+
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+
+print(rules)</code></pre>
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 7 - Predictive Data Mining</h2>
+<p>Load dataset using Pandas.</p>
+<p>Explore dataset structure.</p>
+<p>Handle missing values.</p>
+<p>Split dataset into features and target variable.</p>
+<p>Divide dataset into training and testing sets.</p>
+<p>Select model (Linear Regression / Decision Tree / SVM).</p>
+<p>Train the model.</p>
+<p>Make predictions on test data.</p>
+<p>Evaluate model performance.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+df = pd.read_csv("dataset.csv")
+
+print(df.head())
+
+df.dropna(inplace=True)
+
+X = df.iloc[:,:-1]
+y = df.iloc[:,-1]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+
+print(predictions)</code></pre>
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <div class="markdown-content">
+                <h2>🔥 LAB 8 - Clustering using K-Means Algorithm</h2>
+<p>Load dataset using Pandas.</p>
+<p>Explore dataset structure.</p>
+<p>Handle missing values.</p>
+<p>Select relevant features.</p>
+<p>Standardize the dataset.</p>
+<p>Apply K-Means clustering algorithm.</p>
+<p>Determine optimal number of clusters (Elbow Method).</p>
+<p>Assign cluster labels to data points.</p>
+<p>Visualize clusters using plots.</p>
+<p>Interpret clustering results.</p>
+
+            </div>
+            <button class="toggle-btn" onclick="toggleCode(this)">Show Code</button>
+            <div class="code-container collapsed">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+df = pd.read_csv("dataset.csv")
+
+print(df.head())
+
+df.dropna(inplace=True)
+
+X = df.select_dtypes(include=['int64','float64'])
+
+kmeans = KMeans(n_clusters=3)
+
+df['cluster'] = kmeans.fit_predict(X)
+
+plt.scatter(X.iloc[:,0], X.iloc[:,1], c=df['cluster'])
+plt.show()</code></pre>
+            </div>
+        </div>
+        
+    </div>
+    <script>
+        function toggleCode(btn) {
+            const codeContainer = btn.nextElementSibling;
+            if (codeContainer.classList.contains('collapsed')) {
+                codeContainer.classList.remove('collapsed');
+                btn.textContent = 'Hide Code';
+            } else {
+                codeContainer.classList.add('collapsed');
+                btn.textContent = 'Show Code';
+            }
+        }
+
+        function copyCode(btn) {
+            const codeBlock = btn.nextElementSibling.querySelector('code');
+            navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.backgroundColor = '#10b981'; // Success green
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = codeBlock.textContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.backgroundColor = '#10b981';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.backgroundColor = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
